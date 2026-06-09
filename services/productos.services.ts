@@ -18,8 +18,8 @@ export async function productCreateService(nombre: any, descripcion: any, precio
         const extension = file.originalname.split(".").pop()
         const fileName = `img-${Date.now()}.${extension}`
 
-        //UPLOAD A SUPABASE
-        const { error } = await supabase.storage
+        //subir el aarchivo sin data 
+        const { data, error } = await supabase.storage
             .from("avatars")
             .upload(fileName, file.buffer, {
                 contentType: file.mimetype,
@@ -27,14 +27,14 @@ export async function productCreateService(nombre: any, descripcion: any, precio
 
         if (error) throw error
 
-        //URL PUBLICA
+        //conseguir la url publica con getPublicUrl y la guardo en imageUrl
         const { data: publicUrlData } = supabase.storage
             .from("avatars")
             .getPublicUrl(fileName)
 
         const imageUrl = publicUrlData.publicUrl
 
-        //GUARDAR EN BD
+        //guardo el data en la base de datos con el create y retorno productos 
         const productos = await prisma.productos.create({
             data: {
                 nombre,
@@ -43,10 +43,14 @@ export async function productCreateService(nombre: any, descripcion: any, precio
                 imagen: imageUrl,
             },
         })
-
         return productos
+
     } catch (error) {
         console.error(error)
         throw error
     }
+}
+
+export async function productUpdateService(id: any, newnombre: any, newDescripcion: any, newPrecio: any, newFile: any) {
+
 }
