@@ -60,10 +60,14 @@ export async function productUpdateService(id: any, newNombre: any, newDescripci
         if (!product) throw new Error("Producto no encontrado")
 
         if (product.imagen) {
-            const oldImg = product.imagen.split("/").pop()
-            if (oldImg) {
-                await supabase.storage.from("avatars").remove([oldImg])
+            const url = new URL(product.imagen)
+            const path = url.pathname.split("/avatars/")[1]
+            // console.log(path)
+
+            if (path) {
+                await supabase.storage.from("avatars").remove([path])
             }
+
         }
 
         const extension = newFile.originalname.split(".").pop()
@@ -101,4 +105,24 @@ export async function productUpdateService(id: any, newNombre: any, newDescripci
         console.error(error)
         throw error
     }
+}
+
+export async function productRemoveService(id: number) {
+    const product = await prisma.productos.findUnique({ where: { id: Number(id) } })
+
+    if (!product) throw new Error("Producto no encontrado")
+
+    if (product.imagen) {
+        const url = new URL(product.imagen)
+        const path = url.pathname.split("/avatars/")[1]
+
+        if (path) {
+            await supabase.storage.from("avatars").remove([path])
+        }
+
+    }
+
+    const removeProduct = prisma.productos.delete({ where: { id: Number(id) } })
+    return removeProduct
+
 }

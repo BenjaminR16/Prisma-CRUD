@@ -1,4 +1,4 @@
-import { productosViewService, productCreateService, productUpdateService } from "../services/productos.services";
+import { productosViewService, productCreateService, productUpdateService, productRemoveService } from "../services/productos.services";
 
 export async function productViewController(req: any, res: any) {
     const productos = await productosViewService();
@@ -37,4 +37,19 @@ export async function productUpdateController(req: any, res: any) {
             error: error.message,
         });
     }
+}
+
+export async function productRemoveController(req: any, res: any) {
+    try {
+        const { id } = req.body
+        const remove = await productRemoveService(id)
+        res.status(200).send(remove)
+    } catch (error: any) {
+        res.status(204).send({
+            status: 204,
+            message: "Error al crear el producto",
+            error: error.message,
+        });
+    }
+
 }

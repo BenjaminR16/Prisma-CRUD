@@ -53,6 +53,9 @@ function uploadProduct(e) {
 
     fetch("http://localhost:3000/productos/create", requestOptions)
         .then((response) => response.json())
-        .then((result) => console.log(result))
+        .then((result) => {
+            console.log(result)
+            viewProducts()
+        })
         .catch((error) => console.error(error));
 }
