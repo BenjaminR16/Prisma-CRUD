@@ -1,6 +1,7 @@
 import { prisma } from "../lib/prisma"
 import { createClient } from "@supabase/supabase-js"
 import 'dotenv/config'
+import { error } from "node:console"
 
 const supabase = createClient(
     process.env.SUPABASE_URL_HTTP!,
@@ -51,6 +52,53 @@ export async function productCreateService(nombre: any, descripcion: any, precio
     }
 }
 
-export async function productUpdateService(id: any, newnombre: any, newDescripcion: any, newPrecio: any, newFile: any) {
+export async function productUpdateService(id: any, newNombre: any, newDescripcion: any, newPrecio: any, newFile: any) {
+    try {
+        const product = await prisma.productos.findUnique({ where: { id: Number(id) } })
+        // console.log(product)
 
+        if (!product) throw new Error("Producto no encontrado")
+
+        if (product.imagen) {
+            const oldImg = product.imagen.split("/").pop()
+            if (oldImg) {
+                await supabase.storage.from("avatars").remove([oldImg])
+            }
+        }
+
+        const extension = newFile.originalname.split(".").pop()
+        const fileName = `img-${Date.now()}.${extension}`
+
+        const { data, error } = await supabase.storage
+            .from("avatars")
+            .upload(fileName, newFile.buffer, {
+                contentType: newFile.mimetype,
+            })
+
+        if (error) throw error
+
+        const { data: publicUrlData } = supabase.storage
+            .from("avatars")
+            .getPublicUrl(fileName)
+
+        const imageUrl = publicUrlData.publicUrl
+
+        const updatedProduct = await prisma.productos.update({
+            where: { id: Number(id) },
+            data: {
+                nombre: newNombre,
+                descripcion: newDescripcion,
+                precio: newPrecio,
+                imagen: imageUrl
+            },
+        })
+
+        console.log("UPDATED:", updatedProduct)
+        return updatedProduct
+
+
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
 }

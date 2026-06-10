@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <form>
+    <form onsubmit="uploadProduct(event)">
         <label for="">Nombre Producto:</label>
         <input type="text" name="nombre" id="nombre">
         <label for="">Descripcion:</label>
@@ -19,10 +19,12 @@
         <label for="avatar">Choose a profile picture:</label>
 
         <input type="file" id="file" name="file" accept="image/png, image/jpeg" />
-        <input type="button" value="Enviar">
+        <input type="submit" value="Enviar">
     </form>
 
-    <script></script>
+    <div id="container-product" class="container-product"></div>
+
+    <script src="./script.js"></script>
 </body>
 
 </html>

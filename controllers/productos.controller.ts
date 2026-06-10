@@ -25,9 +25,9 @@ export async function productCreateController(req: any, res: any) {
 
 export async function productUpdateController(req: any, res: any) {
     try {
-        const { id, newNombre, newDescription, newPrice } = req.body
+        const { id, newNombre, newDescripcion, newPrrecio } = req.body
         const newFile = req.file
-        const update = await productUpdateService(id, newNombre, newDescription, newPrice, newFile)
+        const update = await productUpdateService(id, newNombre, newDescripcion, newPrrecio, newFile)
 
         res.status(200).send(update)
     } catch (error: any) {
