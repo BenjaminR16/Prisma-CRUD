@@ -18,6 +18,7 @@ function viewProducts() {
                     <p>${producto.descripcion}</p>
                     <p>${producto.precio}</p>
                 </div>
+                <input type="button" value="Eliminar">
                 </div>
                 
                 `
