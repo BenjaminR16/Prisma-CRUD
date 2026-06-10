@@ -126,3 +126,54 @@ export async function productRemoveService(id: number) {
     return removeProduct
 
 }
+
+export async function productManyService(productos: any[], files: any[]) {
+    try {
+
+        const data = []
+
+        for (let i = 0; i < productos.length; i++) {
+
+            const producto = productos[i]
+            const file = files[i]
+
+            if (!file) throw new Error(`Falta imagen en index ${i}`)
+
+            const extension = file.originalname.split(".").pop()
+            const fileName = `img-${Date.now()}-${i}.${extension}`
+
+            const { error } = await supabase.storage
+                .from("avatars")
+                .upload(fileName, file.buffer, {
+                    contentType: file.mimetype,
+                })
+
+            if (error) throw error
+
+            const { data: publicUrlData } = supabase.storage
+                .from("avatars")
+                .getPublicUrl(fileName)
+
+            data.push({
+                nombre: producto.nombre,
+                descripcion: producto.descripcion,
+                precio: Number(producto.precio),
+                imagen: publicUrlData.publicUrl
+            })
+        }
+
+        return await prisma.productos.createMany({
+            data
+        })
+
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+
+// { nombre: 'PC', descripcion: 'Gaming', precio: 1200 },
+//   { nombre: 'Monitor', descripcion: '27 pulgadas', precio: 250 }
+
+//             }

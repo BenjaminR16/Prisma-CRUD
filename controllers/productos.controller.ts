@@ -1,4 +1,4 @@
-import { productosViewService, productCreateService, productUpdateService, productRemoveService } from "../services/productos.services";
+import { productosViewService, productCreateService, productUpdateService, productRemoveService, productManyService } from "../services/productos.services";
 
 export async function productViewController(req: any, res: any) {
     const productos = await productosViewService();
@@ -52,4 +52,20 @@ export async function productRemoveController(req: any, res: any) {
         });
     }
 
+}
+
+export async function productManyController(req: any, res: any) {
+    try {
+        const productos = JSON.parse(req.body.productos)
+        const files = req.files
+        console.log(files)
+        const uploadMany = await productManyService(productos, files)
+        res.status(201).send(uploadMany);
+    } catch (error: any) {
+        res.status(204).send({
+            status: 204,
+            message: "Error al crear el producto",
+            error: error.message,
+        });
+    }
 }
