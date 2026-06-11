@@ -10,7 +10,7 @@ const supabase = createClient(
 
 export async function productosViewService() {
     const allUsers = await prisma.productos.findMany()
-    console.log(allUsers)
+    // console.log(allUsers)
     return allUsers
 }
 
