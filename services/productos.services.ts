@@ -162,9 +162,7 @@ export async function productManyService(productos: any[], files: any[]) {
             })
         }
 
-        return await prisma.productos.createMany({
-            data
-        })
+        return await prisma.productos.createMany({ data })
 
     } catch (error) {
         console.error(error)
@@ -175,5 +173,3 @@ export async function productManyService(productos: any[], files: any[]) {
 
 // { nombre: 'PC', descripcion: 'Gaming', precio: 1200 },
 //   { nombre: 'Monitor', descripcion: '27 pulgadas', precio: 250 }
-
-//             }

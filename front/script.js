@@ -63,20 +63,14 @@ function uploadProduct(e) {
 
 function addProduct() {
     const container = document.getElementById("products-container")
-
-    const index = container.children.length
-
     const div = document.createElement("div")
 
     div.classList.add("product")
-
     div.innerHTML = `
-        <h3>Producto ${index + 1}</h3>
-
+        <h3>Producto </h3>
         <input type="text" class="nombre" placeholder="Nombre">
         <input type="text" class="descripcion" placeholder="Descripción">
         <input type="text" class="precio" placeholder="Precio">
-
         <input type="file" class="file">
     `
 
