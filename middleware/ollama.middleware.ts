@@ -13,9 +13,10 @@ export async function ollamaMiddleware(req: any, res: any, next: any) {
         type: 'object',
         properties: {
             aprobado: { type: 'boolean' },
-            motivo: { type: 'string' }
+            motivo: { type: 'string' },
+            emocion: { type: 'string' }
         },
-        required: ['aprobado', 'motivo', 'productos']
+        required: ['aprobado', 'motivo', 'emocion']
     }
 
     try {
@@ -25,7 +26,12 @@ export async function ollamaMiddleware(req: any, res: any, next: any) {
             messages: [
                 {
                     role: 'system',
-                    content: 'Eres un asistente de que valida si un producto se crea o no, debes evaluar cada producto por separado. Tienes que evaluar el nombre, descripcion y el precio del producto siguiendo estos criterios: nombre coherente, descripcion util, precio acorde al producto. Una vez el producto sea valido debes responer "Producto valido" y si no es valido "Producto no valido". Debes responder estrictamente siguiendo el esquema JSON provisto. '
+                    content: `
+                        Eres un analizador de productos, tu eres el encargado si se crea un producto, tienes que 
+                        valorar el nombre, la descripcion y el precio, estos deben ser coherentes, utiles y que tengan relacion entre ellos.
+                        Al realizar la valoracion te generará una emoción, la cual la diras solo con una palabra y esto ayudará 
+                        a decidir si el producto se crea o no mediante tu aprobación. Debes responder estrictamente siguiendo el esquema JSON provisto.
+                    `
                 },
                 {
                     role: 'user',
